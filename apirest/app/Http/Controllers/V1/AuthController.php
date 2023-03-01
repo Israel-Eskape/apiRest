@@ -112,7 +112,9 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         //Indicamos que solo queremos recibir email y password de la request
-        $credentials = $request->only('email', 'password');
+        //$credentials = $request->only('email', 'password');
+        $credentials = $request->header();
+        return $credentials;
         //Validaciones
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
