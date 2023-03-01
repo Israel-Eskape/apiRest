@@ -10,6 +10,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
+
+    public function index()
+    {
+        //Listamos todos los user
+        return User::get();
+    }
     //Función que utilizaremos para registrar al usuario
     public function register(Request $request)
     {
@@ -55,6 +61,53 @@ class AuthController extends Controller
             'user' => $user
         ], Response::HTTP_OK);
     }
+    public function update(Request $request, $id)
+    {
+        //Indicamos que solo queremos recibir name, email y password de la request
+        $data = $request->all();
+        //Realizamos las validaciones
+        $validator = Validator::make($data, [
+            'name' => 'required|string|min:3|max:50',
+            'firstName'=>'required|min:3|max:50',
+            'lastName'=>'required|min:3|max:50',
+            'birthday'=>'required|date',
+            'address'=>'required|min:3|max:100',
+            'phone'=>'required|min:3|max:50',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6|max:50',
+            'hotelRole_id'=>'required',
+            'hotelStatusEntity_id'=>'required',
+            
+        ]);
+        //Devolvemos un error si fallan las validaciones
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 400);
+        }
+        //Buscamos el usuario
+        $user = User::findOrfail($id);
+        //Actualizamos el usuario.
+        $user->create([
+            'name' => $request->name,
+            'firstName'=>$request->firstName,
+            'lastName'=>$request->lastName,
+            'birthday'=>$request->birthday,
+		    'address'=>$request->address,
+		    'phone'=>$request->phone,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'hotelRole_id'=>$request->hotelRole_id,
+		    'hotelStatusEntity_id'=>$request->hotelStatusEntity_id,
+        ]);
+        
+        //Devolvemos los datos actualizados.
+        return response()->json([
+            'message' => 'Product updated successfully',
+            'data' => $user
+        ], Response::HTTP_OK);
+
+
+    }
+    
     //Funcion que utilizaremos para hacer login
     public function authenticate(Request $request)
     {
@@ -116,7 +169,7 @@ class AuthController extends Controller
         }
     }
     //Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
-    public function getUser(Request $request)
+    public function show(Request $request)
     {
         //Validamos que la request tenga el token
         $this->validate($request, [
@@ -131,5 +184,17 @@ class AuthController extends Controller
             ], 401);
         //Devolvemos los datos del usuario si todo va bien. 
         return response()->json(['user' => $user]);
+    }
+
+    public function destroy($id)
+    {
+        //Buscamos el usuario
+        $user = User::findOrfail($id);
+        //Eliminamos el producto
+        $user->delete();
+        //Devolvemos la respuesta
+        return response()->json([
+            'message' => 'user deleted successfully'
+        ], Response::HTTP_OK);
     }
 }
