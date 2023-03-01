@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,10 +20,21 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
-        'email',
-        'password',
+		'firstName',
+		'lastName',
+		'birthday',
+		'address',
+		'phone',
+		'email',
+        'email_verified_at',
+		'password',
+		'hotelRole_id',
+		'hotelStatusEntity_id'
     ];
 
+    protected $dates = [
+		'birthday',
+	];
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -41,6 +52,8 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'hotelRole_id' => 'int',
+		'hotelStatusEntity_id' => 'int'
     ];
 
     public function getJWTIdentifier()
@@ -51,4 +64,15 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function hotelRole()
+	{
+		return $this->belongsTo(HotelRole::class);
+	}
+
+	public function hotelStatusEntity()
+	{
+		return $this->belongsTo(HotelStatusEntity::class);
+	}
+
 }

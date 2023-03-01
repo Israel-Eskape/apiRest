@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\V1\ProductsController;
 use App\Http\Controllers\V1\AuthController;
+use App\Http\Controllers\V1\hotelStatusEntityController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -19,6 +20,11 @@ Route::prefix('v1')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::get('products', [ProductsController::class, 'index']);
     Route::get('products/{id}', [ProductsController::class, 'show']);
+
+    
+    Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
+
+
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);

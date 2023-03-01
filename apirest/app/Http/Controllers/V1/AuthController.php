@@ -14,12 +14,20 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         //Indicamos que solo queremos recibir name, email y password de la request
-        $data = $request->only('name', 'email', 'password');
+        $data = $request->only('name', 'firstName','lastName','birthday','address','phone','email', 'password','hotelRole_id','hotelStatusEntity_id');
         //Realizamos las validaciones
         $validator = Validator::make($data, [
-            'name' => 'required|string',
+            'name' => 'required|string|min:3|max:50',
+            'firstName'=>'required|min:3|max:50',
+            'lastName'=>'required|min:3|max:50',
+            'birthday'=>'required|date',
+            'address'=>'required|min:3|max:100',
+            'phone'=>'required|min:3|max:50',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50',
+            'hotelRole_id'=>'required',
+            'hotelStatusEntity_id'=>'required',
+            
         ]);
         //Devolvemos un error si fallan las validaciones
         if ($validator->fails()) {
@@ -28,8 +36,15 @@ class AuthController extends Controller
         //Creamos el nuevo usuario
         $user = User::create([
             'name' => $request->name,
+            'firstName'=>$request->firstName,
+            'lastName'=>$request->lastName,
+            'birthday'=>$request->birthday,
+		    'address'=>$request->address,
+		    'phone'=>$request->phone,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'hotelRole_id'=>$request->hotelRole_id,
+		    'hotelStatusEntity_id'=>$request->hotelStatusEntity_id,
         ]);
         //Nos guardamos el usuario y la contraseña para realizar la petición de token a JWTAuth
         $credentials = $request->only('email', 'password');
