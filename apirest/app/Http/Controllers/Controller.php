@@ -19,7 +19,7 @@ class Controller extends BaseController
                 ];
                 return response()->json($response, 200);
             }
- 
+        
             /**
             * return error response.
             *

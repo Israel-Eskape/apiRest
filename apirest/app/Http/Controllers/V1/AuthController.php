@@ -41,7 +41,8 @@ class AuthController extends Controller
         ]);
         //Devolvemos un error si fallan las validaciones
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            
+            return $this->sendError('Validation Error.', $validator->errors(),401);
             //return response()->json(['error' => $validator->messages()], 400);
         }
         //Creamos el nuevo usuario
@@ -60,11 +61,13 @@ class AuthController extends Controller
         //Nos guardamos el usuario y la contraseña para realizar la petición de token a JWTAuth
         $credentials = $request->only('email', 'password');
         //Devolvemos la respuesta con el token del usuario
-        return response()->json([
+        return $this->sendResponse(Auth::user(),$token);
+
+       /* return response()->json([
             'message' => 'User created',
             'token' => JWTAuth::attempt($credentials),
             'user' => $user
-        ], Response::HTTP_OK);
+        ], Response::HTTP_OK);*/
     }
     public function update(Request $request, $id)
     {
@@ -86,7 +89,9 @@ class AuthController extends Controller
         ]);
         //Devolvemos un error si fallan las validaciones
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 400);
+            return $this->sendError('Authenticate Error.', $validator->messages(),401);
+            
+            //return response()->json(['error' => $validator->messages()], 400);
         }
         //Buscamos el usuario
         $user = User::findOrfail($id);
@@ -104,12 +109,14 @@ class AuthController extends Controller
 		    'hotelStatusEntity_id'=>$request->hotelStatusEntity_id,
         ]);
         
+        
         //Devolvemos los datos actualizados.
-        return response()->json([
-            'message' => 'Product updated successfully',
-            'data' => $user
-        ], Response::HTTP_OK);
+        return $this->sendResponse('user updated successfully',$user);
 
+        /*return response()->json([
+            'message' => 'user updated successfully',
+            'data' => $user
+        ], Response::HTTP_OK);*/
 
     }
     
@@ -139,27 +146,33 @@ class AuthController extends Controller
 
         //Devolvemos un error de validación en caso de fallo en las verificaciones
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 400);
+            return $this->sendError('Authenticate Error.', $validator->messages(),401);
+            //return response()->json(['error' => $validator->messages()], 400);
         }
         //Intentamos hacer login
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 //Credenciales incorrectas.
-                return response()->json([
+                /*return response()->json([
                     'message' => 'Login failed',
-                ], 401);
+                ], 401);*/
+                return $this->sendError('Authenticate.', "Login Failed ",401);
+            
             }
         } catch (JWTException $e) {
             //Error chungo
-            return response()->json([
+            /*return response()->json([
                 'message' => 'Error',
-            ], 500);
+            ], 500);*/
+            return $this->sendError('Error : ',$e,500);
+            
         }
         //Devolvemos el token
-        return response()->json([
+        return $this->sendResponse(Auth::user(),$token);
+        /*return response()->json([
             'token' => $token,
             'user' => Auth::user()
-        ]);
+        ]);*/
     }
     //Función que utilizaremos para eliminar el token y desconectar al usuario
     public function logout(Request $request)
@@ -170,21 +183,25 @@ class AuthController extends Controller
         ]);
         //Si falla la validación
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 400);
+            return $this->sendError('Authenticate Error.', $validator->messages(),401);
+            //return response()->json(['error' => $validator->messages()], 400);
         }
         try {
             //Si el token es valido eliminamos el token desconectando al usuario.
             JWTAuth::invalidate($request->token);
-            return response()->json([
+            return $this->sendResponse("token","User disconnected");
+            /*return response()->json([
                 'success' => true,
                 'message' => 'User disconnected'
-            ]);
+            ]);*/
         } catch (JWTException $exception) {
             //Error chungo
-            return response()->json([
+
+            return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
+            /*return response()->json([
                 'success' => false,
                 'message' => 'Error'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);*/
         }
     }
     //Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
@@ -198,11 +215,13 @@ class AuthController extends Controller
         $user = JWTAuth::authenticate($request->token);
         //Si no hay usuario es que el token no es valido o que ha expirado
         if(!$user)
-            return response()->json([
+            return $this->sendError('Authenticate.', 'Invalid token / token expired',401);
+           /* return response()->json([
                 'message' => 'Invalid token / token expired',
-            ], 401);
+            ], 401);*/
         //Devolvemos los datos del usuario si todo va bien. 
-        return response()->json(['user' => $user]);
+        return $this->sendResponse("User",$user());
+        //return response()->json(['user' => $user]);
     }
 
     public function destroy($id)
@@ -212,9 +231,10 @@ class AuthController extends Controller
         //Eliminamos el producto
         $user->delete();
         //Devolvemos la respuesta
-        return response()->json([
+        return $this->sendResponse('user deleted successfully',Response::HTTP_OK);
+        /*return response()->json([
             'message' => 'user deleted successfully'
-        ], Response::HTTP_OK);
+        ], Response::HTTP_OK);*/
     }
 }
 
