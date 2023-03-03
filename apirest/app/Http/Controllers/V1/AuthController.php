@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\V1;
+
 use App\Http\Controllers\Controller;
 use JWTAuth;
 use App\Models\User;
@@ -8,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use Closure;
+
+
 class AuthController extends Controller
 {
 
@@ -37,7 +41,8 @@ class AuthController extends Controller
         ]);
         //Devolvemos un error si fallan las validaciones
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 400);
+            return $this->sendError('Validation Error.', $validator->errors());
+            //return response()->json(['error' => $validator->messages()], 400);
         }
         //Creamos el nuevo usuario
         $user = User::create([
@@ -113,13 +118,25 @@ class AuthController extends Controller
     {
         //Indicamos que solo queremos recibir email y password de la request
         //$credentials = $request->only('email', 'password');
-        $credentials = $request->header();
-        return $credentials;
-        //Validaciones
+        //$credentials = ($request);
+
+        $credentialsE = $request->header('email');
+        $credentialsP = $request->header('password');
+
+        $credentials =[
+            'email' => $credentialsE,
+            'password'=>$credentialsP
+        ];
+
+        //return $credentials;
+        if(!$credentials){
+            return $this->sendError('Authenticate.', "Email null is required",401);  
+        }
         $validator = Validator::make($credentials, [
             'email' => 'required|email',
             'password' => 'required|string|min:6|max:50'
         ]);
+
         //Devolvemos un error de validación en caso de fallo en las verificaciones
         if ($validator->fails()) {
             return response()->json(['error' => $validator->messages()], 400);
@@ -200,3 +217,7 @@ class AuthController extends Controller
         ], Response::HTTP_OK);
     }
 }
+
+
+//BaseController
+//nombre de la ruta| descripcion |parametros 
