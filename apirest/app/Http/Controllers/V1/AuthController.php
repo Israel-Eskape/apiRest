@@ -71,7 +71,18 @@ class AuthController extends Controller
     }
     public function update(Request $request, $id)
     {
-        //Indicamos que solo queremos recibir name, email y password de la request
+        
+        //Validamos que se nos envie el token
+        $validator = Validator::make($request->header('token'), [
+            'token' => 'required'
+        ]);
+        //Si falla la validación
+        if ($validator->fails()) {
+            return $this->sendError('Authenticate Error.', $validator->messages(),401);
+            //return response()->json(['error' => $validator->messages()], 400);
+        }
+        try {
+             //Indicamos que solo queremos recibir name, email y password de la request
         $data = $request->all();
         //Realizamos las validaciones
         $validator = Validator::make($data, [
@@ -118,6 +129,18 @@ class AuthController extends Controller
             'data' => $user
         ], Response::HTTP_OK);*/
 
+
+        } catch (JWTException $exception) {
+            //Error chungo
+
+            return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
+            /*return response()->json([
+                'success' => false,
+                'message' => 'Error'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);*/
+        }
+
+       
     }
     
     //Funcion que utilizaremos para hacer login
@@ -175,25 +198,36 @@ class AuthController extends Controller
         ]);*/
     }
     //Función que utilizaremos para eliminar el token y desconectar al usuario
+    
     public function logout(Request $request)
     {
-        //Validamos que se nos envie el token
-        $validator = Validator::make($request->only('token'), [
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return $this->sendResponse(true,'Logout successful');
+
+        } catch (JWTException $exception) {
+            return $this->sendError('Error : ','Sorry, the user cannot be logged out',500);
+           
+        }
+    }//Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
+    public function show(Request $request, $id)
+    {
+        
+         //Validamos que se nos envie el token
+         $validator = Validator::make($request->header('token'), [
             'token' => 'required'
         ]);
+
         //Si falla la validación
         if ($validator->fails()) {
             return $this->sendError('Authenticate Error.', $validator->messages(),401);
             //return response()->json(['error' => $validator->messages()], 400);
         }
         try {
-            //Si el token es valido eliminamos el token desconectando al usuario.
-            JWTAuth::invalidate($request->token);
-            return $this->sendResponse("token","User disconnected");
-            /*return response()->json([
-                'success' => true,
-                'message' => 'User disconnected'
-            ]);*/
+            $user = User::findOrfail($id);
+            return $this->sendResponse($user,'usuario');
+           
         } catch (JWTException $exception) {
             //Error chungo
 
@@ -203,12 +237,8 @@ class AuthController extends Controller
                 'message' => 'Error'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);*/
         }
-    }
-    //Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
-    public function show(Request $request)
-    {
         //Validamos que la request tenga el token
-        $this->validate($request, [
+       /* $this->validate($request, [
             'token' => 'required'
         ]);
         //Realizamos la autentificación
@@ -219,8 +249,9 @@ class AuthController extends Controller
            /* return response()->json([
                 'message' => 'Invalid token / token expired',
             ], 401);*/
-        //Devolvemos los datos del usuario si todo va bien. 
-        return $this->sendResponse("User",$user());
+        //Devolvemos los datos del usuario si todo va bien.*/ 
+        //$user = User::findOrfail($id);
+        //return $this->sendResponse("User",$user);
         //return response()->json(['user' => $user]);
     }
 
