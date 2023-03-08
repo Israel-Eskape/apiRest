@@ -1,0 +1,17 @@
+"message": "User created",
+    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL3JlZ2lzdGVyIiwiaWF0IjoxNjc3NjYwMDQ2LCJleHAiOjE2Nzc2NjM2NDYsIm5iZiI6MTY3NzY2MDA0NiwianRpIjoibmY3eXBLcHI0dW03aEpVRSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.YCUADYoc3g2oQ6DILCdxKEmhj73m3d4BSWzH18ioQdk",
+    "user": {
+        "name": "test",
+        "firstName": "testing",
+        "lastName": "testLastName",
+        "birthday": "2000-12-12",
+        "address": "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+        "phone": "9513328988",
+        "email": "test@gmail.com",
+        "hotelRole_id": 1,
+        "hotelStatusEntity_id": 1,
+        "updated_at": "2023-03-01T08:40:46.000000Z",
+        "created_at": "2023-03-01T08:40:46.000000Z",
+        "id": 1
+    }
+}
