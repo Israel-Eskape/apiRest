@@ -40,10 +40,8 @@ class AuthController extends Controller
             
         ]);
         //Devolvemos un error si fallan las validaciones
-        if ($validator->fails()) {
-            
+        if ($validator->fails()) { 
             return $this->sendError('Validation Error.', $validator->errors(),401);
-            //return response()->json(['error' => $validator->messages()], 400);
         }
         //Creamos el nuevo usuario
         $user = User::create([
@@ -60,14 +58,10 @@ class AuthController extends Controller
         ]);
         //Nos guardamos el usuario y la contraseña para realizar la petición de token a JWTAuth
         $credentials = $request->only('email', 'password');
+        $token = JWTAuth::attempt($credentials);
         //Devolvemos la respuesta con el token del usuario
         return $this->sendResponse(Auth::user(),$token);
 
-       /* return response()->json([
-            'message' => 'User created',
-            'token' => JWTAuth::attempt($credentials),
-            'user' => $user
-        ], Response::HTTP_OK);*/
     }
     public function update(Request $request, $id)
     {
@@ -124,20 +118,12 @@ class AuthController extends Controller
         //Devolvemos los datos actualizados.
         return $this->sendResponse('user updated successfully',$user);
 
-        /*return response()->json([
-            'message' => 'user updated successfully',
-            'data' => $user
-        ], Response::HTTP_OK);*/
-
 
         } catch (JWTException $exception) {
             //Error chungo
 
             return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
-            /*return response()->json([
-                'success' => false,
-                'message' => 'Error'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);*/
+    
         }
 
        
@@ -147,9 +133,7 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         //Indicamos que solo queremos recibir email y password de la request
-        //$credentials = $request->only('email', 'password');
-        //$credentials = ($request);
-
+        
         $credentialsE = $request->header('email');
         $credentialsP = $request->header('password');
 
@@ -175,27 +159,16 @@ class AuthController extends Controller
         //Intentamos hacer login
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
-                //Credenciales incorrectas.
-                /*return response()->json([
-                    'message' => 'Login failed',
-                ], 401);*/
-                return $this->sendError('Authenticate.', "Login Failed ",401);
+                 return $this->sendError('Authenticate.', "Login Failed ",401);
             
             }
         } catch (JWTException $e) {
-            //Error chungo
-            /*return response()->json([
-                'message' => 'Error',
-            ], 500);*/
-            return $this->sendError('Error : ',$e,500);
+             return $this->sendError('Error : ',$e,500);
             
         }
         //Devolvemos el token
         return $this->sendResponse(Auth::user(),$token);
-        /*return response()->json([
-            'token' => $token,
-            'user' => Auth::user()
-        ]);*/
+      
     }
     //Función que utilizaremos para eliminar el token y desconectar al usuario
     
@@ -210,7 +183,8 @@ class AuthController extends Controller
             return $this->sendError('Error : ','Sorry, the user cannot be logged out',500);
            
         }
-    }//Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
+    }
+    //Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
     public function show(Request $request, $id)
     {
         
@@ -232,27 +206,9 @@ class AuthController extends Controller
             //Error chungo
 
             return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
-            /*return response()->json([
-                'success' => false,
-                'message' => 'Error'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);*/
+            
         }
-        //Validamos que la request tenga el token
-       /* $this->validate($request, [
-            'token' => 'required'
-        ]);
-        //Realizamos la autentificación
-        $user = JWTAuth::authenticate($request->token);
-        //Si no hay usuario es que el token no es valido o que ha expirado
-        if(!$user)
-            return $this->sendError('Authenticate.', 'Invalid token / token expired',401);
-           /* return response()->json([
-                'message' => 'Invalid token / token expired',
-            ], 401);*/
-        //Devolvemos los datos del usuario si todo va bien.*/ 
-        //$user = User::findOrfail($id);
-        //return $this->sendResponse("User",$user);
-        //return response()->json(['user' => $user]);
+       
     }
 
     public function destroy($id)
@@ -263,12 +219,6 @@ class AuthController extends Controller
         $user->delete();
         //Devolvemos la respuesta
         return $this->sendResponse('user deleted successfully',Response::HTTP_OK);
-        /*return response()->json([
-            'message' => 'user deleted successfully'
-        ], Response::HTTP_OK);*/
+        
     }
 }
-
-
-//BaseController
-//nombre de la ruta| descripcion |parametros 
