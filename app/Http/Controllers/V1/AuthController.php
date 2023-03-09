@@ -20,6 +20,7 @@ class AuthController extends Controller
         //Listamos todos los user
         return User::get();
     }
+    
     //Función que utilizaremos para registrar al usuario
     public function register(Request $request)
     {
@@ -187,17 +188,6 @@ class AuthController extends Controller
     //Función que utilizaremos para obtener los datos del usuario y validar si el token a expirado.
     public function show(Request $request, $id)
     {
-        
-         //Validamos que se nos envie el token
-         $validator = Validator::make($request->header('token'), [
-            'token' => 'required'
-        ]);
-
-        //Si falla la validación
-        if ($validator->fails()) {
-            return $this->sendError('Authenticate Error.', $validator->messages(),401);
-            //return response()->json(['error' => $validator->messages()], 400);
-        }
         try {
             $user = User::findOrfail($id);
             return $this->sendResponse($user,'usuario');
@@ -210,6 +200,24 @@ class AuthController extends Controller
         }
        
     }
+
+
+    public function show2($id)
+    {
+        
+        try {
+            $user = User::findOrfail($id);
+            return $this->sendResponse($user,'usuario');
+           
+        } catch (JWTException $exception) {
+            //Error chungo
+
+            return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
+            
+        }
+       
+    }
+
 
     public function destroy($id)
     {

@@ -1,4 +1,0 @@
-"id";"name";"email";"email_verified_at";"password";"remember_token";"created_at";"updated_at"
-1;"anil";"anil@test";"";"$2y$10$Jij3DVrtISUXHwfceRZPTeMuPx/ke94K4iYrPadkTvZ.4IdrzbwgG";"";"2023-02-28 18:33:57";"2023-02-28 18:33:57"
-2;"israel";"israel@test";"";"$2y$10$h1n.q2Yo3CB5YTuCfSeXJuquAWzizPy3qiNSZLjmMkzUuu2.rovEa";"";"2023-02-28 18:55:18";"2023-02-28 18:55:18"
-3;"Eskape";"eskape@test";"";"$2y$10$CN08/naJR5YpYade3JjfUeOLrQtUiUcSqS/R9w1zL7AT69AIjkoka";"";"2023-02-28 18:55:40";"2023-02-28 18:55:40"

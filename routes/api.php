@@ -19,7 +19,7 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
     Route::post('register', [AuthController::class, 'register']);
     Route::get('getUsers', [AuthController::class, 'index']);
-    Route::get('user/{id}', [AuthController::class, 'show']);
+    Route::get('usert/{id}', [AuthController::class, 'show2']);
 
     Route::get('products/{id}', [ProductsController::class, 'show']);
 
@@ -30,6 +30,7 @@ Route::prefix('v1')->group(function () {
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('user/{id}', [AuthController::class, 'show']);
         Route::post('get-user', [AuthController::class, 'getUser']);
         Route::post('products', [ProductsController::class, 'store']);
         Route::put('products/{id}', [ProductsController::class, 'update']);
