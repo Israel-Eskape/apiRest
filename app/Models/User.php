@@ -74,5 +74,9 @@ class User extends Authenticatable implements JWTSubject
 	{
 		return $this->belongsTo(HotelStatusEntity::class);
 	}
+    public function hotelReservation()
+    {
+        return $this->hasMany(hotelReservation::class);
+    }
 
 }

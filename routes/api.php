@@ -2,6 +2,7 @@
 use App\Http\Controllers\V1\ProductsController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\hotelStatusEntityController;
+use App\Http\Controllers\V1\hotelReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -19,11 +20,12 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
     Route::post('register', [AuthController::class, 'register']);
     Route::get('getUsers', [AuthController::class, 'index']);
-    Route::get('usert/{id}', [AuthController::class, 'show2']);
+    //Route::get('user/{id}', [AuthController::class, 'show']);
 
-    Route::get('products/{id}', [ProductsController::class, 'show']);
+    Route::get('reservationA',[hotelReservationController::class, 'index']);
+    Route::get('reservationA/{id}',[hotelReservationController::class, 'show']);
+    Route::post('reservation',[hotelReservationController::class, 'store']);
 
-    
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
 
 
