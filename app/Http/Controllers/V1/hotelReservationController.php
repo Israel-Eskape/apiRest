@@ -77,16 +77,82 @@ class hotelReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+     // Update a reservation
+     public function update(Request $request, $id)
+     {
+         $reservation = hotelReservation::find($id);
+         //return $id;
+         if (!$reservation) {
+             return response()->json(['error' => 'Reservation not found'], 404);
+         }
+ 
+         $data = $request->all();
+
+            $validator = Validator::make($data, [
+            'hotelUser_id' => 'numeric',
+            'description' => 'string',
+            'arrival' => 'date',
+            'departure' => 'date',
+            'amountPeople'=>'numeric',
+            'hotelRoom_id'=>'numeric',
+            'hotelReservationStatu_id'=>'numeric',
+            'hotelStatusEntity_id'=>'numeric'
+
+        ]);
+ 
+         if ($validator->fails()) {
+             return response()->json(['error' => $validator->errors()], 400);
+         }
+ 
+         if ($request->has('hotelUser_id')) {
+             $reservation->hotelUser_id = $request->hotelUser_id;
+         }
+ 
+         if ($request->has('description')) {
+             $reservation->description = $request->description;
+         }
+ 
+         if ($request->has('arrival')) {
+             $reservation->arrival = $request->arrival;
+         }
+ 
+         if ($request->has('departure')) {
+             $reservation->departure = $request->departure;
+         }
+
+         if ($request->has('amountPeople')) {
+            $reservation->amountPeople = $request->amountPeople;
+        }
+
+        if ($request->has('hotelRoom_id')) {
+            $reservation->hotelRoom_id = $request->hotelRoom_id;
+        }
+
+        if ($request->has('hotelReservationStatu_id')) {
+            $reservation->hotelReservationStatu_id = $request->hotelReservationStatu_id;
+        }
+
+        if ($request->has('hotelStatusEntity_id')) {
+            $reservation->hotelStatusEntity_id = $request->hotelStatusEntity_id;
+        }
+
+ 
+         $reservation->save();
+ 
+         return response()->json(['data' => $reservation], 200);
+     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+     // Delete a reservation
+     public function destroy($id)
+     {
+         $reservation = hotelReservation::find($id);
+         if (!$reservation) {
+             return response()->json(['error' => 'Reservation not found'], 404);
+         }
+         $reservation->delete();
+         return response()->json(['message' => 'Reservation deleted'], 200);
+     }
 }

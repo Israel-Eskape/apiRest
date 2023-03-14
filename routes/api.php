@@ -22,9 +22,10 @@ Route::prefix('v1')->group(function () {
     Route::get('getUsers', [AuthController::class, 'index']);
     //Route::get('user/{id}', [AuthController::class, 'show']);
 
-    Route::get('reservationA',[hotelReservationController::class, 'index']);
-    Route::get('reservationA/{id}',[hotelReservationController::class, 'show']);
+    Route::get('reservation',[hotelReservationController::class, 'index']);
+    Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
     Route::post('reservation',[hotelReservationController::class, 'store']);
+    Route::post('update-reservation/{id}',[hotelReservationController::class,'update']);
 
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
 
