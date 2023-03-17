@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
+use App\Models\hotelReservation;
 use Closure;
 
 
@@ -201,12 +202,16 @@ class AuthController extends Controller
        
     }
 
-
-    public function show2($id)
+    
+    public function show2(Request $request,$id)
     {
         
         try {
-            $user = User::findOrfail($id);
+            $user = User::join("hotelReservations","hotelReservations.hotelUser_id","=","users.id")
+            ->select("*")
+            ->get();
+
+            //$user = User::findOrfail($id);
             return $this->sendResponse($user,'usuario');
            
         } catch (JWTException $exception) {

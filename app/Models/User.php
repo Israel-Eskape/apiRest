@@ -43,6 +43,11 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'hotelRole_id',
+		'hotelStatusEntity_id',
+        "email_verified_at",
+        "created_at",
+        "updated_at",
     ];
 
     /**

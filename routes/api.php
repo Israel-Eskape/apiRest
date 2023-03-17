@@ -18,25 +18,22 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v1')->group(function () {
     //Prefijo V1, todo lo que este dentro de este grupo se accedera escribiendo v1 en el navegador, es decir /api/v1/*
     Route::post('login', [AuthController::class, 'authenticate']);
-    Route::post('register', [AuthController::class, 'register']);
-    Route::get('getUsers', [AuthController::class, 'index']);
-    //Route::get('user/{id}', [AuthController::class, 'show']);
-
-    Route::get('reservation',[hotelReservationController::class, 'index']);
-    Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
-    Route::post('reservation',[hotelReservationController::class, 'store']);
-    Route::post('update-reservation/{id}',[hotelReservationController::class,'update']);
-
+    Route::post('register', [AuthController::class, 'register']); 
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
-
+    Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
+    
 
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('user/{id}', [AuthController::class, 'show']);
-        Route::post('get-user', [AuthController::class, 'getUser']);
-        Route::post('products', [ProductsController::class, 'store']);
-        Route::put('products/{id}', [ProductsController::class, 'update']);
-        Route::delete('products/{id}', [ProductsController::class, 'destroy']);
+        Route::get('getUsers', [AuthController::class, 'index']);
+    
+        Route::get('reservation',[hotelReservationController::class, 'index']);
+        Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
+        Route::post('reservation',[hotelReservationController::class, 'store']);
+        Route::post('update-reservation/{id}',[hotelReservationController::class,'update']);
+     //   Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
+             
     });
 });

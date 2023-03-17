@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\hotelReservation;
+use Illuminate\Support\Facades\DB;
 
 class hotelReservationController extends Controller
 {
@@ -73,7 +74,37 @@ class hotelReservationController extends Controller
         return response()->json(['data' => $reservation], 200);
     }
 
+    //Get a specific user_id
+    public function showUserReservation($id){
+        try {
+            $reservation = DB::table('hotelReservations')
+            ->join('hotelReservationStatus', 'hotelReservations.hotelReservationStatu_id', '=', 'hotelReservationStatus.id')
+            ->join('hotelRooms', 'hotelReservations.hotelRoom_id', '=', 'hotelRooms.id')
+            //->select('users.id', 'users.name', 'roles.name as role', 'departments.name as department')
+            ->where('hotelUser_id','like',$id)
+            /*->select('hotelReservations.id','hotelReservations.hotelUser_id',
+                    'hotelReservations.description','hotelReservations.arrival','hotelReservations.dearture',
+                    'hotelReservations.amountPeople','hotelRooms.name')
+                    'hotelReservationStatus.name')
+            */
+            ->select('hotelReservations.id',
+                    "hotelReservations.hotelUser_id as User_id",
+                    'hotelReservations.description',
+                    'hotelReservations.arrival',
+                    'hotelReservations.departure',
+                    'hotelReservations.amountPeople',
+                    'hotelRooms.name as Rooms',
+                    'hotelReservationStatus.name as status'
+                    )
+            ->get();
 
+        return response()->json($reservation);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return $th;
+        }
+    }
     /**
      * Update the specified resource in storage.
      */

@@ -66,9 +66,14 @@ class HotelReservation extends Model
 		'hotelUser_id',
 		'hotelRoom_id',
 		'hotelReservationStatu_id',
-		
 		'hotelStatusEntity_id'
 	];
+	protected $hidden = [
+		
+        'created_at',
+        'updated_at',
+		'hotelStatusEntity_id'
+    ];
 
 	public function hotel_check_in()
 	{
