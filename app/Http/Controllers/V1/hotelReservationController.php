@@ -13,6 +13,7 @@ class hotelReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         $reservations = hotelReservation::all();
@@ -126,9 +127,10 @@ class hotelReservationController extends Controller
             'departure' => 'date',
             'amountPeople'=>'numeric',
             'hotelRoom_id'=>'numeric',
+            //'checkIn'=>timestamps(),
             'hotelReservationStatu_id'=>'numeric',
             'hotelStatusEntity_id'=>'numeric'
-
+            
         ]);
  
          if ($validator->fails()) {
@@ -160,7 +162,14 @@ class hotelReservationController extends Controller
         }
 
         if ($request->has('hotelReservationStatu_id')) {
+            if($request->hotelReservationStatu_id == 9){
+                $hotelCancellationController = new hotelCancellationController();
+                $hotelCancellationController->store($request,$reservation);
+                
+            }
             $reservation->hotelReservationStatu_id = $request->hotelReservationStatu_id;
+            
+
         }
 
         if ($request->has('hotelStatusEntity_id')) {

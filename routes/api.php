@@ -20,7 +20,6 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
     Route::post('register', [AuthController::class, 'register']); 
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
-    Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
     
 
     Route::group(['middleware' => ['jwt.verify']], function() {
@@ -33,7 +32,7 @@ Route::prefix('v1')->group(function () {
         Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
         Route::post('reservation',[hotelReservationController::class, 'store']);
         Route::post('update-reservation/{id}',[hotelReservationController::class,'update']);
-     //   Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
+        Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
              
     });
 });

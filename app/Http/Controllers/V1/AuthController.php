@@ -202,27 +202,6 @@ class AuthController extends Controller
        
     }
 
-    
-    public function show2(Request $request,$id)
-    {
-        
-        try {
-            $user = User::join("hotelReservations","hotelReservations.hotelUser_id","=","users.id")
-            ->select("*")
-            ->get();
-
-            //$user = User::findOrfail($id);
-            return $this->sendResponse($user,'usuario');
-           
-        } catch (JWTException $exception) {
-            //Error chungo
-
-            return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
-            
-        }
-       
-    }
-
 
     public function destroy($id)
     {
