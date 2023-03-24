@@ -40,6 +40,13 @@ class HotelCancellation extends Model
 		'hotelStatusEntity_id'
 	];
 
+    protected $hidden = [
+		
+        'created_at',
+        'updated_at',
+		'hotelStatusEntity_id'
+    ];
+    
 	public function hotel_reservation()
 	{
 		return $this->belongsTo(HotelReservation::class);

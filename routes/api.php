@@ -3,6 +3,7 @@ use App\Http\Controllers\V1\ProductsController;
 use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\hotelStatusEntityController;
 use App\Http\Controllers\V1\hotelReservationController;
+use App\Http\Controllers\V1\hotelHotelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -20,14 +21,14 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
     Route::post('register', [AuthController::class, 'register']); 
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
-    
+    Route::get('hotels',[hotelHotelController::class,'index']);
 
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('user/{id}', [AuthController::class, 'show']);
         Route::get('getUsers', [AuthController::class, 'index']);
-    
+        
         Route::get('reservation',[hotelReservationController::class, 'index']);
         Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
         Route::post('reservation',[hotelReservationController::class, 'store']);
