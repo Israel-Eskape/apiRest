@@ -160,6 +160,9 @@ class hotelReservationController extends Controller
         if ($request->has('hotelRoom_id')) {
             $reservation->hotelRoom_id = $request->hotelRoom_id;
         }
+        if ($request->has('checkOut')) {
+            return "Se activa la habitación disponible 1";
+        }
 
         if ($request->has('hotelReservationStatu_id')) {
             if($request->hotelReservationStatu_id == 9){
@@ -195,4 +198,33 @@ class hotelReservationController extends Controller
          $reservation->delete();
          return response()->json(['message' => 'Reservation deleted'], 200);
      }
+     public function checkAvailability($hotelRoom_id,$arrival,$departure)
+{
+    $existing_reservation = hotelReservation::where('hotelRoom_id', $hotelRoom_id)
+                                        ->where(function ($query) use ($arrival, $departure) {
+                                            $query->whereBetween('arrival', [$arrival, $departure])
+                                                ->orWhereBetween('departure', [$arrival, $departure])
+                                                ->orWhere(function ($query) use ($arrival, $departure) {
+                                                    $query->where('arrival', '<', $arrival)
+                                                        ->where('departure', '>', $departure);
+                                                });
+                                        })
+                                        ->first();
+
+    if ($existing_reservation) {
+        $available_date = date('Y-m-d', strtotime($existing_reservation->departure . ' +1 day'));
+        return $this->sendError('Error existing reservation','The room is not available for the selected dates. The next available date is ' . $available_date,401);
+        /*return response()->json([
+            'status' => 'error',
+            'message' => 'The room is not available for the selected dates. The next available date is ' . $available_date
+        ]);*/
+    } else {
+        return $this->sendResponse('succes','The room is available for the selected dates');
+        /*return response()->json([
+            'status' => 'success',
+            'message' => 'The room is available for the selected dates'
+        ]);*/
+    }
+}
+
 }

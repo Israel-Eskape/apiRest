@@ -23,6 +23,8 @@ Route::prefix('v1')->group(function () {
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
     Route::get('hotels',[hotelHotelController::class,'index']);
 
+    Route::get('checkAvailability/{room_id}/{start_data}/{end_data}',[hotelReservationController::class,'checkAvailability']);
+    
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
