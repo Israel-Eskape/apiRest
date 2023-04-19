@@ -4,6 +4,7 @@ use App\Http\Controllers\V1\AuthController;
 use App\Http\Controllers\V1\hotelStatusEntityController;
 use App\Http\Controllers\V1\hotelReservationController;
 use App\Http\Controllers\V1\hotelHotelController;
+use App\Http\Controllers\V1\hotelRoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 /*
@@ -21,12 +22,20 @@ Route::prefix('v1')->group(function () {
     Route::post('login', [AuthController::class, 'authenticate']);
     Route::post('register', [AuthController::class, 'register']); 
     Route::get('statusEntity',[hotelStatusEntityController::class,'index']);
-    Route::get('hotels',[hotelHotelController::class,'index']);
-    
+   
+    Route::get('hotels',[hotelHotelController::class,'index']); 
     Route::get('hotel/{id}', [hotelHotelController::class, 'show']);
+    
+    Route::get('rooms',[hotelRoomController::class,'index']); 
+    Route::get('hotelRoom/{id}', [hotelHotelController::class, 'show']);  
   
     Route::get('checkAvailability/{room_id}/{start_data}/{end_data}',[hotelReservationController::class,'checkAvailability']);
     
+    Route::get('reservation',[hotelReservationController::class, 'index']);
+    Route::post('reservation',[hotelReservationController::class, 'store']);
+            
+
+
     Route::group(['middleware' => ['jwt.verify']], function() {
         //Todo lo que este dentro de este grupo requiere verificación de usuario.
         Route::post('logout', [AuthController::class, 'logout']);
@@ -34,9 +43,9 @@ Route::prefix('v1')->group(function () {
         Route::get('getUsers', [AuthController::class, 'index']);
         Route::post('update/{id}', [AuthController::class, 'update']);
 
-        Route::get('reservation',[hotelReservationController::class, 'index']);
+        //Route::get('reservation',[hotelReservationController::class, 'index']);
         Route::get('reservation/{id}',[hotelReservationController::class, 'show']);
-        Route::post('reservation',[hotelReservationController::class, 'store']);
+        //Route::post('reservation',[hotelReservationController::class, 'store']);
         Route::post('update-reservation/{id}',[hotelReservationController::class,'update']);
         Route::get('userReservation/{id}',[hotelReservationController::class, 'showUserReservation']);
              

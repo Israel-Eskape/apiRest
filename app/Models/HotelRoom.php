@@ -45,6 +45,15 @@ class HotelRoom extends Model
 		'hotelHotel_id' => 'int',
 		'hotelStatusEntity_id' => 'int'
 	];
+	protected $hidden = [
+	'id',
+	'hotelTypeRoom_id',
+	'hotelRoomCategory_id',
+	'hotelHotel_id',
+	'hotelStatusEntity_id',
+	'created_at',
+	'updated_at'
+	];
 
 	protected $fillable = [
 		'name',

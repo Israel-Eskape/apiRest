@@ -45,6 +45,12 @@ class hotelReservationController extends Controller
             return $this->sendError('Validation Error.', $validator->errors(),401);
         }
         
+        $availableRoom = $this->checkAvailability($request->hotelRoom_id,$request->arrival,$request->departure);
+        
+        if($availableRoom){
+            return $availableRoom;
+        }
+        else{
         $reservation = hotelReservation::create([
             'description' => $request->description,
             'arrival' => $request->arrival,
@@ -58,6 +64,7 @@ class hotelReservationController extends Controller
         ]);
 
         return response()->json(['data' => $reservation], 201);
+        }
         } catch (\Throwable $th) {
             return $th;
         }
@@ -161,7 +168,7 @@ class hotelReservationController extends Controller
             $reservation->hotelRoom_id = $request->hotelRoom_id;
         }
         if ($request->has('checkOut')) {
-            return "Se activa la habitación disponible 1";
+            return "Se activa la habitaci車n disponible 1";
         }
 
         if ($request->has('hotelReservationStatu_id')) {
@@ -198,6 +205,7 @@ class hotelReservationController extends Controller
          $reservation->delete();
          return response()->json(['message' => 'Reservation deleted'], 200);
      }
+     
      public function checkAvailability($hotelRoom_id,$arrival,$departure)
     {
     $existing_reservation = hotelReservation::where('hotelRoom_id', $hotelRoom_id)
@@ -218,13 +226,7 @@ class hotelReservationController extends Controller
             'status' => 'error',
             'message' => 'The room is not available for the selected dates. The next available date is ' . $available_date
         ]);*/
-    } else {
-        return $this->sendResponse('succes','The room is available for the selected dates');
-        /*return response()->json([
-            'status' => 'success',
-            'message' => 'The room is available for the selected dates'
-        ]);*/
-    }
+    } 
 }
 
 }
