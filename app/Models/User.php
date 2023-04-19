@@ -1,87 +1,95 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable implements JWTSubject
+/**
+ * Class User
+ * 
+ * @property int $id
+ * @property string $name
+ * @property string $firstName
+ * @property string $lastName
+ * @property Carbon $birthday
+ * @property string $address
+ * @property string $phone
+ * @property string $email
+ * @property Carbon|null $email_verified_at
+ * @property string $password
+ * @property int $hotelRole_id
+ * @property int $hotelStatusEntity_id
+ * @property string|null $remember_token
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property HotelRole $hotel_role
+ * @property HotelStatusEntity $hotel_status_entity
+ * @property Collection|HotelEmployee[] $hotel_employees
+ * @property Collection|HotelReservation[] $hotel_reservations
+ * @property Collection|IidtecEmployee[] $iidtec_employees
+ *
+ * @package App\Models
+ */
+class User extends Model
 {
-    use HasFactory, Notifiable;
+	protected $table = 'users';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
+	protected $casts = [
+		'birthday' => 'datetime',
+		'email_verified_at' => 'datetime',
+		'hotelRole_id' => 'int',
+		'hotelStatusEntity_id' => 'int'
+	];
+
+	protected $hidden = [
+		'password',
+		'remember_token'
+	];
+
+	protected $fillable = [
+		'name',
 		'firstName',
 		'lastName',
 		'birthday',
 		'address',
 		'phone',
 		'email',
-        'email_verified_at',
+		'email_verified_at',
 		'password',
 		'hotelRole_id',
-		'hotelStatusEntity_id'
-    ];
-
-    protected $dates = [
-		'birthday',
-	];
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'hotelRole_id',
 		'hotelStatusEntity_id',
-        "email_verified_at",
-        "created_at",
-        "updated_at",
-    ];
+		'remember_token'
+	];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'hotelRole_id' => 'int',
-		'hotelStatusEntity_id' => 'int'
-    ];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
-
-    public function hotelRole()
+	public function hotel_role()
 	{
 		return $this->belongsTo(HotelRole::class);
 	}
 
-	public function hotelStatusEntity()
+	public function hotel_status_entity()
 	{
 		return $this->belongsTo(HotelStatusEntity::class);
 	}
-    public function hotelReservation()
-    {
-        return $this->hasMany(hotelReservation::class);
-    }
 
+	public function hotel_employees()
+	{
+		return $this->hasMany(HotelEmployee::class);
+	}
+
+	public function hotel_reservations()
+	{
+		return $this->hasMany(HotelReservation::class, 'hotelUser_id');
+	}
+
+	public function iidtec_employees()
+	{
+		return $this->hasMany(IidtecEmployee::class);
+	}
 }

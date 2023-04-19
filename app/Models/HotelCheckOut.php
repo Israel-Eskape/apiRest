@@ -10,38 +10,42 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class HotelCancellation
+ * Class HotelCheckOut
  * 
  * @property int $id
- * @property string $reason
- * @property int $hotelReservation_id
+ * @property Carbon $date
+ * @property Carbon $time
+ * @property int $hotelPoll_id
  * @property int $hotelStatusEntity_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
- * @property HotelReservation $hotel_reservation
+ * @property HotelPoll $hotel_poll
  * @property HotelStatusEntity $hotel_status_entity
  *
  * @package App\Models
  */
-class HotelCancellation extends Model
+class HotelCheckOut extends Model
 {
-	protected $table = 'hotelCancellations';
+	protected $table = 'hotelCheckOuts';
 
 	protected $casts = [
-		'hotelReservation_id' => 'int',
+		'date' => 'datetime',
+		'time' => 'datetime',
+		'hotelPoll_id' => 'int',
 		'hotelStatusEntity_id' => 'int'
 	];
 
 	protected $fillable = [
-		'reason',
-		'hotelReservation_id',
+		'date',
+		'time',
+		'hotelPoll_id',
 		'hotelStatusEntity_id'
 	];
 
-	public function hotel_reservation()
+	public function hotel_poll()
 	{
-		return $this->belongsTo(HotelReservation::class);
+		return $this->belongsTo(HotelPoll::class);
 	}
 
 	public function hotel_status_entity()

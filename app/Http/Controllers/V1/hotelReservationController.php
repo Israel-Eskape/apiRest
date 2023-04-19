@@ -44,7 +44,7 @@ class hotelReservationController extends Controller
         if ($validator->fails()) {
             return $this->sendError('Validation Error.', $validator->errors(),401);
         }
-
+        
         $reservation = hotelReservation::create([
             'description' => $request->description,
             'arrival' => $request->arrival,
@@ -199,7 +199,7 @@ class hotelReservationController extends Controller
          return response()->json(['message' => 'Reservation deleted'], 200);
      }
      public function checkAvailability($hotelRoom_id,$arrival,$departure)
-{
+    {
     $existing_reservation = hotelReservation::where('hotelRoom_id', $hotelRoom_id)
                                         ->where(function ($query) use ($arrival, $departure) {
                                             $query->whereBetween('arrival', [$arrival, $departure])

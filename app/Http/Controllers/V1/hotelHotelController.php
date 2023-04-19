@@ -18,7 +18,8 @@ class hotelHotelController extends Controller
         //
         try {
             $hotel = hotelHotel::all();
-            return response()->json(['data' => $hotel], 200);
+            
+            return $this->sendResponse($hotel,'usuario');
 
         } catch (\Throwable $th) {
             return "error";
@@ -39,6 +40,15 @@ class hotelHotelController extends Controller
     public function show(string $id)
     {
         //
+        try {
+            $hotelhotel = hotelHotel::findOrfail($id);
+            return $this->sendResponse($hotelhotel,'hotelhotel');
+           
+        } catch (JWTException $exception) {
+            //Error chungo
+            return $this->sendError('Error : ',Response::HTTP_INTERNAL_SERVER_ERROR,500);
+            
+        }
     }
 
     /**

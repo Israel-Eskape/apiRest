@@ -7,45 +7,45 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class HotelCancellation
+ * Class HotelRoomCategory
  * 
  * @property int $id
- * @property string $reason
- * @property int $hotelReservation_id
+ * @property string $name
+ * @property string $description
  * @property int $hotelStatusEntity_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
- * @property HotelReservation $hotel_reservation
  * @property HotelStatusEntity $hotel_status_entity
+ * @property Collection|HotelRoom[] $hotel_rooms
  *
  * @package App\Models
  */
-class HotelCancellation extends Model
+class HotelRoomCategory extends Model
 {
-	protected $table = 'hotelCancellations';
+	protected $table = 'hotelRoomCategorys';
 
 	protected $casts = [
-		'hotelReservation_id' => 'int',
 		'hotelStatusEntity_id' => 'int'
 	];
 
 	protected $fillable = [
-		'reason',
-		'hotelReservation_id',
+		'name',
+		'description',
 		'hotelStatusEntity_id'
 	];
-
-	public function hotel_reservation()
-	{
-		return $this->belongsTo(HotelReservation::class);
-	}
 
 	public function hotel_status_entity()
 	{
 		return $this->belongsTo(HotelStatusEntity::class);
+	}
+
+	public function hotel_rooms()
+	{
+		return $this->hasMany(HotelRoom::class);
 	}
 }

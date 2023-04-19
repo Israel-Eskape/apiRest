@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class HotelHotel
+ * Class HotelIidtec
  * 
  * @property int $id
  * @property string $name
@@ -19,24 +19,21 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $address
  * @property string $phone
  * @property string $email
- * @property int $hoteliidtec_id
  * @property int $hotelStatusEntity_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
- * @property HotelIidtec $hotel_iidtec
  * @property HotelStatusEntity $hotel_status_entity
- * @property Collection|HotelEmployee[] $hotel_employees
- * @property Collection|HotelRoom[] $hotel_rooms
+ * @property Collection|HotelHotel[] $hotel_hotels
+ * @property Collection|IidtecEmployee[] $iidtec_employees
  *
  * @package App\Models
  */
-class HotelHotel extends Model
+class HotelIidtec extends Model
 {
-	protected $table = 'hotelHotels';
+	protected $table = 'hotelIidtecs';
 
 	protected $casts = [
-		'hoteliidtec_id' => 'int',
 		'hotelStatusEntity_id' => 'int'
 	];
 
@@ -46,27 +43,21 @@ class HotelHotel extends Model
 		'address',
 		'phone',
 		'email',
-		'hoteliidtec_id',
 		'hotelStatusEntity_id'
 	];
-
-	public function hotel_iidtec()
-	{
-		return $this->belongsTo(HotelIidtec::class, 'hoteliidtec_id');
-	}
 
 	public function hotel_status_entity()
 	{
 		return $this->belongsTo(HotelStatusEntity::class);
 	}
 
-	public function hotel_employees()
+	public function hotel_hotels()
 	{
-		return $this->hasMany(HotelEmployee::class);
+		return $this->hasMany(HotelHotel::class, 'hoteliidtec_id');
 	}
 
-	public function hotel_rooms()
+	public function iidtec_employees()
 	{
-		return $this->hasMany(HotelRoom::class);
+		return $this->hasMany(IidtecEmployee::class);
 	}
 }

@@ -69,30 +69,31 @@ class AuthController extends Controller
     {
         
         //Validamos que se nos envie el token
-        $validator = Validator::make($request->header('token'), [
+       /* $validator = Validator::make($request->header('token'), [
             'token' => 'required'
         ]);
         //Si falla la validación
         if ($validator->fails()) {
             return $this->sendError('Authenticate Error.', $validator->messages(),401);
             //return response()->json(['error' => $validator->messages()], 400);
-        }
+        }*/
         try {
              //Indicamos que solo queremos recibir name, email y password de la request
         $data = $request->all();
+    
         //Realizamos las validaciones
         $validator = Validator::make($data, [
-            'name' => 'required|string|min:3|max:50',
-            'firstName'=>'required|min:3|max:50',
-            'lastName'=>'required|min:3|max:50',
-            'birthday'=>'required|date',
-            'address'=>'required|min:3|max:100',
-            'phone'=>'required|min:3|max:50',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:50',
-            'hotelRole_id'=>'required',
+            'name' => 'string|min:3|max:50',
+            'firstName'=>'min:3|max:50',
+            'lastName'=>'min:3|max:50',
+            'birthday'=>'date',
+            'address'=>'min:3|max:100',
+            'phone'=>'min:3|max:50',
+            'email' => 'email',
+            'password' => 'string|min:6|max:50',
+          /*  'hotelRole_id'=>'required',
             'hotelStatusEntity_id'=>'required',
-            
+            */
         ]);
         //Devolvemos un error si fallan las validaciones
         if ($validator->fails()) {
@@ -103,7 +104,7 @@ class AuthController extends Controller
         //Buscamos el usuario
         $user = User::findOrfail($id);
         //Actualizamos el usuario.
-        $user->create([
+        $user->save([
             'name' => $request->name,
             'firstName'=>$request->firstName,
             'lastName'=>$request->lastName,
@@ -114,6 +115,7 @@ class AuthController extends Controller
             'password' => bcrypt($request->password),
             'hotelRole_id'=>$request->hotelRole_id,
 		    'hotelStatusEntity_id'=>$request->hotelStatusEntity_id,
+            
         ]);
         
         
