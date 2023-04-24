@@ -40,6 +40,10 @@ class HotelHotel extends Model
 		'hotelStatusEntity_id' => 'int'
 	];
 
+	protected $hidden = [
+		
+	];
+	
 	protected $fillable = [
 		'name',
 		'description',

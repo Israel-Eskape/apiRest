@@ -17,12 +17,15 @@ class hotelHotelController extends Controller
     {
         //
         try {
-            $hotel = hotelHotel::all();
-            
-            return $this->sendResponse($hotel,'usuario');
+//            $hoteles = hotelHotel::all();
+            $hoteles = hotelHotel::where('hotelStatusEntity_id', 1)->get();
+            /*foreach ($hoteles as $hotel) {
+                $hotel->imagen = base64_encode($hotel->imagen);
+            }*/
+            return $this->sendResponse($hoteles,'hoteles');
 
         } catch (\Throwable $th) {
-            return "error";
+            return $th;
         }
     }
 
@@ -30,9 +33,18 @@ class hotelHotelController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
+{
+    $hotel = new hotelHotel;
+    $hotel->name = $request->input('name');
+    $hotel->description = $request->input('description');
+
+    $hotel->imagen = $request->file('imagen')->getContent();
+    $hotel->save();
+
+   // return response()->json($hotel);
+    return $this->sendResponse($hotel,'hotel ');
+}
+
 
     /**
      * Display the specified resource.
