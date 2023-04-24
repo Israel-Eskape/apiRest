@@ -13,6 +13,13 @@ class hotelHotelController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function getHotelesAleatorios()
+    {
+
+        $hoteles = hotelHotel::inRandomOrder()->limit(3)->get();
+        return $this->sendResponse($hoteles,'hoteles');
+        //return response()->json($hoteles);
+    }
     public function index()
     {
         //

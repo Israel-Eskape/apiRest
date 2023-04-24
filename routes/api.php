@@ -25,7 +25,8 @@ Route::prefix('v1')->group(function () {
    
     Route::get('hotels',[hotelHotelController::class,'index']); 
     Route::get('hotel/{id}', [hotelHotelController::class, 'show']);
-    
+    Route::get('hotelesRandom', [hotelHotelController::class, 'getHotelesAleatorios']);
+
     Route::get('rooms',[hotelRoomController::class,'index']); 
     Route::get('hotelRoom/{id}', [hotelHotelController::class, 'show']);  
   
